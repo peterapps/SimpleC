@@ -1,6 +1,6 @@
 #!/bin/bash
 
-out_file=$(echo "$1" | cut -f 1 -d '.')
+out_file=${1%.*}
 dir=$(dirname "$0")
 
 $dir/src/simplec $1 $out_file.s
