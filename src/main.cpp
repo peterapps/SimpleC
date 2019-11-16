@@ -9,6 +9,7 @@ using namespace std;
 int main(int argc, char *argv[]){
 	if (argc != 2 && argc != 3 && argc != 4){
 		cout << "Usage: ./simplec input_file.c [output_file.s] [-v]" << endl;
+		return 1;
 	}
 	bool verbose = (argc == 4) && (string(argv[3]) == "-v");
 
