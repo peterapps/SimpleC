@@ -31,3 +31,28 @@ StatementNode::~StatementNode(){
 ExpressionNode::ExpressionNode(Token tok) : num(tok.intval) {
 
 }
+
+ostream & operator<<(ostream &os, ProgramNode &prg){
+	os << "PROGRAM" << endl;
+	os << *(prg.main);
+	return os;
+}
+
+ostream & operator<<(ostream &os, FunctionNode &func){
+	os << "  FUNCTION: Type=" << func.return_type << ", Identifier=" << func.identifier << endl;
+	os << "    Body:" << endl;
+	for (auto it = func.body.begin(); it != func.body.end(); ++it){
+		os << *(*it) << endl;
+	}
+	return os;
+}
+
+ostream & operator<<(ostream &os, StatementNode &st){
+	os << "      RETURN " << *(st.exp);
+	return os;	
+}
+
+ostream &operator<<(ostream &os, ExpressionNode &exp){
+	os << "Int<" << exp.num << ">";
+	return os;
+}

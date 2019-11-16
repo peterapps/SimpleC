@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include "Token.h"
+#include <iostream>
 
 class ExpressionNode {
         public:
@@ -33,3 +34,9 @@ class ProgramNode {
 		~ProgramNode();
 		FunctionNode *main;
 };
+
+std::ostream & operator<<(std::ostream &os, ProgramNode &prg);
+std::ostream & operator<<(std::ostream &os, FunctionNode &func);
+std::ostream & operator<<(std::ostream &os, StatementNode &st);
+std::ostream & operator<<(std::ostream &os, ExpressionNode &exp);
+
