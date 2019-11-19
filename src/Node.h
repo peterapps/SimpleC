@@ -4,18 +4,36 @@
 #include <string>
 #include "Token.h"
 #include <iostream>
+#include <cassert>
+
+enum OperatorType {
+	NOP, NEGATION, COMPLEMENT, LOGICAL_NOT
+};
+
+enum ExpressionType {
+	CONSTANT, UNARY_OP
+};
 
 class ExpressionNode {
         public:
                 ExpressionNode(Token tok);
+		ExpressionNode(std::vector<Token> toks);
+		~ExpressionNode();
                 int num;
+		OperatorType type;
+		ExpressionNode *exp;
+};
+
+enum StatementType {
+	RETURN
 };
 
 class StatementNode {
         public:
-                StatementNode(ExpressionNode *_exp);
+                StatementNode(StatementType _type, ExpressionNode *_exp);
                 ~StatementNode();
                 ExpressionNode *exp;
+		StatementType type;
 };
 
 class FunctionNode {

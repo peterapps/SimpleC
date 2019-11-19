@@ -46,12 +46,24 @@ void Parser::parse_next(vector<Token>::iterator &it){
 StatementNode * Parser::parse_statement(vector<Token>::iterator &it){
 	assert(*it == Token(KEYWORD, "return"));
 	++it;
-	assert((*it).type == INTLIT);
-	ExpressionNode *exp = new ExpressionNode(*it);
-	++it;
+	vector<Token> exp_tokens;
+	while (!(*it == Token(PUNC, ';'))){
+		exp_tokens.push_back(*it);
+		++it;
+	}
+	assert((*exp_tokens.rbegin()).type == INTLIT);
+	ExpressionNode *exp = nullptr;
+	if (exp_tokens.size() > 1){
+		exp = new ExpressionNode(exp_tokens);
+	} else if (exp_tokens.size() == 1) {
+		exp = new ExpressionNode(exp_tokens.front());
+	} else {
+		cout << "No expression found" << endl;
+		assert(false);
+	}
 	assert(*it == Token(PUNC, ';'));
 	++it;
-	return new StatementNode(exp);
+	return new StatementNode(RETURN, exp);
 }
 
 ProgramNode * Parser::get_AST(){

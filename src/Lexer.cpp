@@ -1,11 +1,11 @@
 #include "Lexer.h"
 #include <string>
-#include <regex>
+#include <cassert>
 
 using namespace std;
 
 bool is_punc(char c){
-	string valids = "{}();";
+	string valids = "{}();-~!+*/";
 	for (size_t i = 0; i < valids.length(); ++i){
 		if (c == valids[i]) return true;
 	}
@@ -64,6 +64,9 @@ void Lexer::next_token(istream &is, char first){
 			t.type = IDENTIFIER;
 		}
 		t.strval = str;
+	} else {
+		cout << "Unknown token" << endl;
+		assert(false);
 	}
 	// Append token to list
 	tokens.push_back(t);

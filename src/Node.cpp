@@ -20,7 +20,7 @@ FunctionNode::~FunctionNode(){
 	}
 }
 
-StatementNode::StatementNode(ExpressionNode *_exp) : exp(_exp) {
+StatementNode::StatementNode(StatementType _type, ExpressionNode *_exp) : exp(_exp), type(_type) {
 
 }
 
@@ -28,8 +28,38 @@ StatementNode::~StatementNode(){
 	delete exp;
 }
 
-ExpressionNode::ExpressionNode(Token tok) : num(tok.intval) {
+ExpressionNode::ExpressionNode(Token tok) : num(tok.intval), type(NOP), exp(nullptr) {
+}
 
+ExpressionNode::ExpressionNode(vector<Token> toks) {
+	Token tok = toks.front();
+	assert(tok.type == PUNC);
+	switch(tok.charval) {
+		case '-':
+			type = NEGATION;
+			break;
+		case '~':
+			type = COMPLEMENT;
+			break;
+		case '!':
+			type = LOGICAL_NOT;
+			break;
+		default:
+			cout << "Unknown operator " << tok.charval << endl;
+			assert(false);
+			break;
+	}
+	toks.erase(toks.begin());
+	if (toks.size() > 1){
+		exp = new ExpressionNode(toks);
+	} else {
+		assert(toks.front().type == INTLIT);
+		exp = new ExpressionNode(toks.front());
+	}
+}
+
+ExpressionNode::~ExpressionNode(){
+	if (exp) delete exp;
 }
 
 ostream & operator<<(ostream &os, ProgramNode &prg){
@@ -48,11 +78,28 @@ ostream & operator<<(ostream &os, FunctionNode &func){
 }
 
 ostream & operator<<(ostream &os, StatementNode &st){
-	os << "      RETURN " << *(st.exp);
+	os << "      RETURN ( " << *(st.exp) << ")";
 	return os;	
 }
 
 ostream &operator<<(ostream &os, ExpressionNode &exp){
-	os << "Int<" << exp.num << ">";
+	if (!exp.exp) os << "Int<" << exp.num << "> ";
+	else {
+		switch(exp.type){
+			case NEGATION:
+				os << "NEGATION ";
+				break;
+			case COMPLEMENT:
+				os << "COMPLEMENT ";
+				break;
+			case LOGICAL_NOT:
+				os << "LOGICAL_NOT ";
+				break;
+			default:
+				os << "NOP ";
+				break;
+		}
+		os << *(exp.exp);
+	}
 	return os;
 }
